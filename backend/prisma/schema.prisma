@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Technician {
+  id             String                 @id @default(cuid())
+  name           String
+  email          String                 @unique
+  phone          String
+  specialization String
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  conferences    ConferenceTechnician[]
+}
+
+model Location {
+  id                String            @id @default(cuid())
+  name              String
+  address           String
+  capacity          Int
+  hasVideoEquipment Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  conferences       VideoConference[]
+}
+
+model VideoConference {
+  id               String                 @id @default(cuid())
+  title            String
+  description      String
+  date             String
+  startTime        String
+  endTime          String
+  participantCount Int                    @default(0)
+  status           String                 @default("scheduled")
+  locationId       String
+  location         Location               @relation(fields: [locationId], references: [id])
+  technicians      ConferenceTechnician[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+}
+
+model ConferenceTechnician {
+  id           String          @id @default(cuid())
+  conferenceId String
+  technicianId String
+  conference   VideoConference @relation(fields: [conferenceId], references: [id], onDelete: Cascade)
+  technician   Technician      @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([conferenceId, technicianId])
+}
