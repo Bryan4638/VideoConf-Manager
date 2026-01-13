@@ -1,12 +1,14 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import Login from "../pages/Login";
+import Login from "../../pages/Login";
 import { BrowserRouter } from "react-router-dom";
 
 describe("Login Component", () => {
   it("renders login form correctly", () => {
     render(
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Login />
       </BrowserRouter>
     );
@@ -24,7 +26,9 @@ describe("Login Component", () => {
 
   it("updates input values", () => {
     render(
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Login />
       </BrowserRouter>
     );
